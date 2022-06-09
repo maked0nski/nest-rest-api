@@ -3,8 +3,7 @@ import {HttpService} from "@nestjs/axios";
 import {map, Observable} from "rxjs";
 
 import {createAlchemyWeb3} from "@alch/alchemy-web3";
-
-import {config} from "../config/config";
+import * as solanaWeb3 from '@solana/web3.js';
 
 @Injectable()
 export class AlchemyApiService {
@@ -14,7 +13,7 @@ export class AlchemyApiService {
 
     findAll(): Observable<any> {
 
-        let url = `${config.baseURL}/${config.apiKey}/getNFTs/?owner=${config.ownerAddr}`;
+        let url = `${process.env.ALCHEMY_BASE_URL}/${process.env.ALCHEMY_API_KEY}/getNFTs/?owner=${process.env.OWNER}`;
 
         return this.httpService.get(url)
             .pipe(
@@ -25,8 +24,12 @@ export class AlchemyApiService {
 
     async getNftByOwner(owner: String) {
         const web3 = createAlchemyWeb3(
-            `${config.baseURL}/${config.apiKey}`
+            `${process.env.ALCHEMY_BASE_URL}/${process.env.ALCHEMY_API_KEY}`
         );
         return await web3.alchemy.getNfts({owner: `${owner}`})
+    }
+
+    async solana() {
+        return solanaWeb3
     }
 }
