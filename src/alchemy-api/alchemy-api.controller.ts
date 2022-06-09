@@ -11,9 +11,10 @@ export class AlchemyApiController {
         return this.alchemyApiService.findAll();
     }
 
-    @Get('/nft1')
-    getNft1(@Query('owner') owner: String) {
-        console.log(owner)
-        return this.alchemyApiService.getAll();
+    @Get('/nftByOwner')
+    getNftByOwner(
+        @Query('owner') owner: String,
+    ) {
+        return this.alchemyApiService.getNftByOwner(owner);
     }
 }

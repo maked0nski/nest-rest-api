@@ -2,14 +2,15 @@ import {Injectable} from '@nestjs/common';
 import {HttpService} from "@nestjs/axios";
 import {map, Observable} from "rxjs";
 
-import { createAlchemyWeb3 } from "@alch/alchemy-web3";
+import {createAlchemyWeb3} from "@alch/alchemy-web3";
 
 import {config} from "../config/config";
 
 @Injectable()
 export class AlchemyApiService {
 
-    constructor(private httpService: HttpService) {}
+    constructor(private httpService: HttpService) {
+    }
 
     findAll(): Observable<any> {
 
@@ -17,15 +18,15 @@ export class AlchemyApiService {
 
         return this.httpService.get(url)
             .pipe(
-            map(response => response.data)
-        )
+                map(response => response.data)
+            )
     }
 
 
-    async getAll() {
+    async getNftByOwner(owner: String) {
         const web3 = createAlchemyWeb3(
             `${config.baseURL}/${config.apiKey}`
         );
-        return await web3.alchemy.getNfts({owner: `${config.ownerAddr}`})
+        return await web3.alchemy.getNfts({owner: `${owner}`})
     }
 }
