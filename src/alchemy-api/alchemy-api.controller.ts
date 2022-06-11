@@ -1,6 +1,6 @@
 import {Controller, Get, Query} from '@nestjs/common';
 import {AlchemyApiService} from "./alchemy-api.service";
-import {ApiOkResponse, ApiOperation, ApiParam, ApiProperty, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {ApiOkResponse, ApiOperation, ApiTags} from "@nestjs/swagger";
 
 @ApiTags('Alchemy-api')
 @Controller('alchemy-api')
@@ -11,8 +11,8 @@ export class AlchemyApiController {
     @ApiOperation({summary: 'getNFTs from alchemy API by owner. owner: [string] address for NFT owner (can be in ENS format!).  tray this owner value: "0x9eef2e4511390ce4"'})
     @ApiOkResponse({
         status: 200,
-        schema:{
-            example:[
+        schema: {
+            example: [
                 {
                     "contract": {
                         "name": "Gaia",
@@ -98,8 +98,6 @@ export class AlchemyApiController {
         return this.alchemyApiService.findAll(owner);
     }
 
-
-
     @ApiOperation({summary: 'get Solana Account Info. Tray this account Solana in Base58 format : "3yFwqXBfZY4jBVUafQ1YEXw189y2dN3V5KQq9uzBDy1E"',})
     @Get('/solana')
     getSol(@Query('account') account: string) {
@@ -107,13 +105,15 @@ export class AlchemyApiController {
         return this.alchemyApiService.solana(account);
     }
 
-
-
-
     @ApiOperation({summary: 'Get All Tocken. Tray this account Solana in Base58 format : "3yFwqXBfZY4jBVUafQ1YEXw189y2dN3V5KQq9uzBDy1E"',})
     @Get('/GetAllTockenBySolana')
-
     GetAllTockenBySolana(@Query('account') account?: string) {
         return this.alchemyApiService.GetAllTockenBySolana(account);
+    }
+
+    @ApiOperation({summary: 'Get All NFT. With metaplex. Tray this account Solana in Base58 format : "3yFwqXBfZY4jBVUafQ1YEXw189y2dN3V5KQq9uzBDy1E"',})
+    @Get("/getNft")
+    getNft(@Query('account') account?: string): Promise<any[]> {
+        return this.alchemyApiService.sonataNFT(account)
     }
 }
