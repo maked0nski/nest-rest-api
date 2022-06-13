@@ -5,6 +5,7 @@ import {ApiOkResponse, ApiOperation, ApiTags} from "@nestjs/swagger";
 @ApiTags('Alchemy-api')
 @Controller('alchemy-api')
 export class AlchemyApiController {
+
     constructor(private readonly alchemyApiService: AlchemyApiService) {
     }
 

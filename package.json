@@ -33,10 +33,12 @@
     "@solana/wallet-adapter-base": "^0.9.5",
     "@solana/wallet-adapter-wallets": "^0.16.1",
     "@solana/web3.js": "^1.43.6",
+    "axios": "^0.27.2",
     "cross-env": "^7.0.3",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
-    "swagger-ui-express": "^4.4.0"
+    "swagger-ui-express": "^4.4.0",
+    "theblockchainapi": "^1.0.9404"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",
