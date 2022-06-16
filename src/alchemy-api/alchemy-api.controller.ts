@@ -1,6 +1,6 @@
 import {Controller, Get, Query} from '@nestjs/common';
-import {AlchemyApiService} from "./alchemy-api.service";
 import {ApiOkResponse, ApiOperation, ApiTags} from "@nestjs/swagger";
+import {AlchemyApiService} from "./alchemy-api.service";
 
 @ApiTags('Alchemy-api')
 @Controller('alchemy-api')
