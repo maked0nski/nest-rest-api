@@ -1,17 +1,19 @@
 import {Injectable} from '@nestjs/common';
 import * as nfteyez from "@nfteyez/sol-rayz";
-import {NFT} from "./nft.interface";
+import {NFT} from "./types/nft.interface";
 import axios from "axios";
+import {chengeType, pagination} from "./helper/helper";
 
 @Injectable()
 export class NftService {
 
     private nftsArr: Array<NFT> = []
 
+    async getNftList(pubWallet: string, name?, page_size?, page_number?) {
 
-    async getNftList(pubWallet: string) {
+        page_size = +page_size || 2
+        page_number = +page_number || 1
 
-        let url = 'https://d2guc73qlgzsw3hmuffta6wrotgzxnxcbx3bhqtzlto2pwowty.arweave.net/'
 
         const publicAddress = await nfteyez.resolveToWalletAddress({
             text: pubWallet
@@ -20,23 +22,21 @@ export class NftService {
         const nftArray = await nfteyez.getParsedNftAccountsByOwner({
             publicAddress,
         });
-        await Promise.all(
-            nftArray.map(async (nft) => {
+
+        await Promise.all(nftArray.map(async (nft) => {
                     const response = await axios.get(nft.data.uri);
-                    response.data   //деталі конкретної NFT
 
-                    let element = {
-                        name: response.data.name,
-                        symbol: response.data.symbol,
-                        description: response.data.description,
-                        arweaveURI: response.data.image,
-                        image: url + response.data.image.split('/')[3]
+                    if (name && Array.isArray(response)) {
+
+                    } else {
+                        this.nftsArr.push(<NFT>chengeType(response))
                     }
-                    this.nftsArr.push(<NFT>element)
+                }))
 
-                }
-            ))
-
-        return this.nftsArr
+        if (name) {
+            let filterArr = this.nftsArr.filter(item => item.name.includes(name));
+            return pagination(filterArr, page_size, page_number)
+        }
+        return pagination(this.nftsArr, page_size, page_number)
     }
 }
