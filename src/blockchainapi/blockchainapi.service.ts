@@ -94,10 +94,8 @@ export class BlockchainapiService {
             return await apiInstance.solanaGetNFTsBelongingToWallet(network, pubWallet)
                 .then((data) => {
                     if (!name) {
-                        // console.log('in if block' + name)
                         return data;
                     } else {
-                        // console.log(name)
                         return data.nfts_metadata.filter(nft => nft.data.name.includes(name));
                     }
 

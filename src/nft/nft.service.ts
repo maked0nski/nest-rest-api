@@ -11,7 +11,7 @@ export class NftService {
 
     async getNftList(pubWallet: string, name?, page_size?, page_number?) {
 
-        page_size = +page_size || 2
+        page_size = +page_size || 20
         page_number = +page_number || 1
 
 
