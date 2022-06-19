@@ -3,6 +3,8 @@ import {ConfigModule} from "@nestjs/config";
 
 import {BlockchainapiModule} from './blockchainapi/blockchainapi.module';
 import { NftModule } from './nft/nft.module';
+import {AlchemyApiModule} from "./alchemy-api/alchemy-api.module";
+
 
 @Module({
     imports: [
@@ -11,6 +13,7 @@ import { NftModule } from './nft/nft.module';
         }),
         BlockchainapiModule,
         NftModule,
+        AlchemyApiModule
     ],
     controllers: [],
 })

@@ -28,11 +28,23 @@ export interface NFTMetadata {
 }
 
 export interface NFT {
+    contract: string,
+    tokenId: string,
+    blockchain: string,
+    favorite: string,
     name: string;
-    symbol: string;
-    description: string,
-    updateAuthority: string;
-    arweaveURI: string;
-    image: string;
-    external_url: ''
+    imageUrl: string;
+    imagePreview: string,
+    imageThumbnail: string,
+    imageOriginal: string,
+    animationUrl: string,
+    animationOriginal: string,
+    info:{
+        name: string,
+        creator: string,
+        released: string,
+        collection: string,
+        owner: string,
+        contract: string,
+    }
 }

@@ -13,26 +13,13 @@ export class BlockchainapiController {
 
     @ApiOperation({
         summary: 'Платний Варіант !!!  Get All NFT from Solana. Tray this account Solana in Base58 format : "3yFwqXBfZY4jBVUafQ1YEXw189y2dN3V5KQq9uzBDy1E"',
-        description:"pubWallet - обовязкове поле. Вказується Salana wallet,  name - якщо заповнене  - фільтрує результат за ndt.data.name. ",
-
+        description:"localhost:3000/nft/GitYucwpNcg6Dx1Y15UQ9TQn8LZMX1uuqQNn8rXxEWNC?name=Saiba&page_size=3&page_number=2" +
+            "  pubWallet - обовязкове поле. Вказується Salana wallet, в кверю -  name - якщо заповнене  - фільтрує результат за name. + пагінація",
     })
     @Get('/blockchain/:pubWallet')
     @HttpCode(HttpStatus.OK)
-    getAll(@Param('pubWallet') pubWallet: string, @Query('name') name?: string) {
-        return this.blockchainapiService.blockChainApi(pubWallet, name);
+    getAll(@Param('pubWallet') pubWallet: string, @Query('name') name?: string, @Query('page_size') page_size?, @Query('page_number') page_number?) {
+        return this.blockchainapiService.blockChainApi(pubWallet, name, page_size, page_number);
     }
-
-    @ApiOperation({
-        summary: 'Безкоштовний варіант !!!  Get All NFT from Solana. Tray Solana: "3yFwqXBfZY4jBVUafQ1YEXw189y2dN3V5KQq9uzBDy1E"',
-        description:"pubWallet - обовязкове поле. Вказується Salana wallet",
-
-    })
-    @Get('/nfteyez/:pubWallet')
-    @HttpCode(HttpStatus.OK)
-    async test(@Param('pubWallet') pubWallet: string) {
-        return this.blockchainapiService.nfteyez(pubWallet)
-    }
-
-
 
 }

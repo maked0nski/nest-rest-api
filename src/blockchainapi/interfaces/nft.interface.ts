@@ -2,7 +2,7 @@ export interface NftInterface {
     mint: string;
     updateAuthority: string;
     data: {
-        creators: any[];
+        creators: any;
         name: string;
         symbol: string;
         uri: string;

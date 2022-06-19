@@ -11,7 +11,7 @@ export class NftController {
     @ApiOperation({
         summary: 'Безкоштовний варіант !!!  Get All NFT from Solana. Tray Solana: "3yFwqXBfZY4jBVUafQ1YEXw189y2dN3V5KQq9uzBDy1E"',
         description:"localhost:3000/nft/GitYucwpNcg6Dx1Y15UQ9TQn8LZMX1uuqQNn8rXxEWNC?name=Saiba&page_size=3&page_number=2" +
-            "  pubWallet - обовязкове поле. Вказується Salana wallet, в кверю -  name - якщо заповнене  - фільтрує результат за ndt.data.name. + пагінація",
+            "  pubWallet - обовязкове поле. Вказується Salana wallet, в кверю -  name - якщо заповнене  - фільтрує результат за name. + пагінація",
     })
     @Get('/:pubWallet')
     @HttpCode(HttpStatus.OK)

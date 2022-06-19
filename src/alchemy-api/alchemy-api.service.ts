@@ -4,11 +4,10 @@ import {map, Observable} from "rxjs";
 
 import 'reflect-metadata'
 import * as solanaWeb3 from '@solana/web3.js';
-import { Connection } from "@metaplex/js";
-import { programs } from "@metaplex/js"
+import {Connection, programs} from "@metaplex/js";
+
 const { metadata: { Metadata } } = programs;
 
-const crypto = require('crypto');
 
 @Injectable()
 export class AlchemyApiService {
@@ -41,19 +40,14 @@ export class AlchemyApiService {
     async solana(_account: string) {
         let solanaWallet = new solanaWeb3.PublicKey(_account);
 
-        // console.log('solanaWallet.encode()', solanaWallet.encode());
-        // console.log("solanaWallet-", solanaWallet);
-        // console.log("toBase58", solanaWallet.toBase58());
-
         let connection = new solanaWeb3.Connection(
             solanaWeb3.clusterApiUrl('devnet'),
             'confirmed',
         );
 
-        let account = await connection.getAccountInfo(solanaWallet);
         // console.log("account", account);
 
-        return account
+        return await connection.getAccountInfo(solanaWallet)
     }
 
     async sonataNFT(account: string): Promise<any[]>{

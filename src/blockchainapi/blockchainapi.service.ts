@@ -1,84 +1,23 @@
 import {Injectable} from '@nestjs/common';
-import * as nfteyez from "@nfteyez/sol-rayz";
-// import { FilterOperator, Paginate, PaginateQuery, paginate, Paginated , PaginateConfig} from 'nestjs-paginate'
-import {query} from "express";
-import {NftInterface} from "./interfaces/nft.interface";
-// import {  InjectRepository,Repository, Entity, PrimaryGeneratedColumn, Column } from '@nestjs/typeorm';
-// import { Repository, Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
+import axios from "axios";
+import {tokenData} from "./types/NFTmetadata";
+import {pagination} from "../helper/helper";
 
 var theblockchainapi = require('theblockchainapi');
 
 @Injectable()
 export class BlockchainapiService {
 
-    // private paginateConfig: PaginateConfig<NftInterface> = {
-    //     /**
-    //      * Required: true (must have a minimum of one column)
-    //      * Type: (keyof CatEntity)[]
-    //      * Description: These are the columns that are valid to be sorted by.
-    //      */
-    //     sortableColumns: ['mint', 'updateAuthority'],
-    //     /**
-    //      * Required: false
-    //      * Type: [keyof CatEntity, 'ASC' | 'DESC'][]
-    //      * Default: [[sortableColumns[0], 'ASC]]
-    //      * Description: The order to display the sorted entities.
-    //      */
-    //     // defaultSortBy: [['name', 'DESC']],
-    //     /**
-    //      * Required: false
-    //      * Type: (keyof CatEntity)[]
-    //      * Description: These columns will be searched through when using the search query
-    //      * param. Limit search scope further by using `searchBy` query param.
-    //      */
-    //     // searchableColumns: ['name', 'color'],
-    //     /**
-    //      * Required: false
-    //      * Type: number
-    //      * Default: 100
-    //      * Description: The maximum amount of entities to return per page.
-    //      */
-    //     maxLimit: 20,
-    //
-    //     /**
-    //      * Required: false
-    //      * Type: number
-    //      * Default: 20
-    //      */
-    //     defaultLimit: 2,
-    //
-    //     /**
-    //      * Required: false
-    //      * Type: TypeORM find options
-    //      * Default: None
-    //      * https://typeorm.io/#/find-optionsfind-options.md
-    //      */
-    //     where: {color: 'ginger'},
-    //
-    //     /**
-    //      * Required: false
-    //      * Type: { [key in CatEntity]?: FilterOperator[] } - Operators based on TypeORM find operators
-    //      * Default: None
-    //      * https://typeorm.io/#/find-options/advanced-options
-    //      */
-    //     // filterableColumns: { data.name: [FilterOperator.EQ, FilterOperator.IN] },
-    //     /**
-    //      * Required: false
-    //      * Type: RelationColumn<CatEntity>
-    //      * Description: Indicates what relations of entity should be loaded.
-    //      */
-    //     relations: [],
-    //
-    //     /**
-    //      * Required: false
-    //      * Type: boolean
-    //      * Description: Disables the global condition of "non-deleted" for the entity with delete date columns.
-    //      * https://typeorm.io/select-query-builder#querying-deleted-rows
-    //      */
-    //     withDeleted: false,
-    // }
+    private nftsArr: Array<tokenData> = []
+    private res = {
+        statusCode: 200,
+        data: this.nftsArr
+    }
 
-    async blockChainApi(pubWallet: string, name?: string) {
+    async blockChainApi(pubWallet: string, name?, page_size?, page_number?) {
+        page_size = +page_size || 20
+        page_number = +page_number || 1
+
         try {
             let defaultClient = theblockchainapi.ApiClient.instance;
 
@@ -92,11 +31,43 @@ export class BlockchainapiService {
             // String | The network ID (devnet, mainnet-beta)
             let network = 'mainnet-beta';
             return await apiInstance.solanaGetNFTsBelongingToWallet(network, pubWallet)
-                .then((data) => {
+                .then(async (data) => {
+                    await Promise.all(data.nfts_metadata.map(async (nft)=>{
+                        const response = await axios.get(nft.data.uri);
+                        this.nftsArr.push(
+                            {
+                                contract: response.data?.contract || null,
+                                tokenId: response.data?.tokenId || null,
+                                blockchain: response.data?.blockchain || null,
+                                favorite: response.data?.favorite || null,
+                                name: response.data.name,
+                                imageUrl: response.data.image,
+                                imagePreview: null,
+                                imageThumbnail: null,
+                                imageOriginal: null,
+                                animationUrl: response.data?.animation_url || null,
+                                animationOriginal: null,
+                                info: {
+                                    name: response.data.name,
+                                    creators: nft.data.creators,
+                                    released: null,
+                                    collection: response.data?.collection?.name || null,
+                                    owner: null,
+                                    contract: null,
+                                }
+                            }
+                        )
+                    }))
+
+
+                    //  фільтраці імен
                     if (!name) {
-                        return data;
+                        this.res.data = pagination(this.nftsArr, page_size, page_number)
+                        return this.res
                     } else {
-                        return data.nfts_metadata.filter(nft => nft.data.name.includes(name));
+                        let filterArr = this.res.data.filter(nft => nft.name.includes(name));
+                        this.res.data = pagination(filterArr, page_size, page_number)
+                        return this.res
                     }
 
                 }, (error) => {
@@ -109,26 +80,6 @@ export class BlockchainapiService {
             return null;
         }
 
-    }
-
-    async nfteyez(walletPublicKey: string) {
-
-        try {
-            const publicAddress = await nfteyez.resolveToWalletAddress({
-                text: walletPublicKey
-            });
-            console.log("publicAddress - " + publicAddress)
-
-            const nftArray = await nfteyez.getParsedNftAccountsByOwner({
-                publicAddress:publicAddress
-            });
-
-
-            return nftArray
-
-        } catch (error) {
-            console.log("Error thrown, while fetching NFTs", error.message);
-        }
     }
 
 }

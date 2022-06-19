@@ -11,28 +11,38 @@ type NFTdata = {
     updateAuthority: string,
     explorerUrl: string,
     data: {
+        creators: []
         name: string,
+        share: number[],
+        symbol: string,
         uri: string,
         verified: number[],
-        share: number[],
-        creators: string[]
     }
+    metadata_account:string,
+    edition_nonce: number,
+    token_standard:number,
+    collection: object,
+    uses:number
 }
 
-// export type tokenData = {
-//     mint: string;
-//     updateAuthority: string;
-//     data: {
-//         creators: any[];
-//         name: string;
-//         symbol: string;
-//         uri: string;
-//         sellerFeeBasisPoints: number;
-//     };
-//     key: any;
-//     primarySaleHappened: boolean;
-//     isMutable: boolean;
-//     editionNonce: number;
-//     masterEdition?: string;
-//     edition?: string;
-// }
+export interface tokenData  {
+    contract: string,
+    tokenId: string,
+    blockchain: string,
+    favorite: string,
+    name: string;
+    imageUrl: string;
+    imagePreview: string,
+    imageThumbnail: string,
+    imageOriginal: string,
+    animationUrl: string,
+    animationOriginal: string,
+    info:{
+        name: string,
+        creators: [],
+        released: string,
+        collection: string,
+        owner: string,
+        contract: string,
+    }
+}
